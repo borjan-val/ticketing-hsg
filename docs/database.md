@@ -30,3 +30,13 @@
 ┃ salt TEXT             ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
 ```
+```text
+┏━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Ticketchecker         ┃
+┠───────────────────────┨
+┃ eventid UUID PRIMARY  ┃
+┃ username TEXT PRIMARY ┃
+┃ saltedpasshash TEXT   ┃
+┃ salt TEXT             ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━┛
+```
