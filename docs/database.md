@@ -17,7 +17,7 @@
 ┃ ticketid TEXT PRIMARY ┃
 ┃ name TEXT             ┃
 ┃ surname TEXT          ┃
-┃ birthday DATE         ┃
+┃ grade NUMBER          ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
 ```
 ```text
