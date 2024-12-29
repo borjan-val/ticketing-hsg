@@ -22,21 +22,13 @@
 ```
 ```text
 ┏━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Ticketseller          ┃
+┃ Helper                ┃
 ┠───────────────────────┨
 ┃ eventid UUID PRIMARY  ┃
 ┃ username TEXT PRIMARY ┃
 ┃ saltedpasshash TEXT   ┃
-┃ salt TEXT             ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━┛
-```
-```text
-┏━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Ticketchecker         ┃
-┠───────────────────────┨
-┃ eventid UUID PRIMARY  ┃
-┃ username TEXT PRIMARY ┃
-┃ saltedpasshash TEXT   ┃
+┃ cansell BOOLEAN       ┃
+┃ cancheck BOOLEAN      ┃
 ┃ salt TEXT             ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
 ```
