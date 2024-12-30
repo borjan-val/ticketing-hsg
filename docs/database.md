@@ -21,14 +21,25 @@
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
 ```
 ```text
-┏━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Helper                ┃
-┠───────────────────────┨
-┃ eventid UUID PRIMARY  ┃
-┃ username TEXT PRIMARY ┃
-┃ saltedpasshash TEXT   ┃
-┃ cansell BOOLEAN       ┃
-┃ cancheck BOOLEAN      ┃
-┃ salt TEXT             ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━┛
+┏━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Helper                 ┃
+┠────────────────────────┨
+┃ eventid UUID PRIMARY   ┃
+┃ username TEXT PRIMARY  ┃
+┃ saltedpasshash TEXT    ┃
+┃ cansell BOOLEAN        ┃
+┃ cancheck BOOLEAN       ┃
+┃ canaddhelperss BOOLEAN ┃
+┃ salt TEXT              ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━┛
+```
+```text
+┏━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Session              ┃
+┠──────────────────────┨
+┃ tokenid UUID PRIMARY ┃
+┃ expires DATE         ┃
+┃ eventid UUID         ┃
+┃ username TEXT        ┃
+┗━━━━━━━━━━━━━━━━━━━━━━┛
 ```
