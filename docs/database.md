@@ -18,6 +18,7 @@
 ┃ name TEXT             ┃
 ┃ surname TEXT          ┃
 ┃ grade NUMBER          ┃
+┃ paidfor BOOLEAN       ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
 ```
 ```text
@@ -29,7 +30,7 @@
 ┃ saltedpasshash TEXT    ┃
 ┃ cansell BOOLEAN        ┃
 ┃ cancheck BOOLEAN       ┃
-┃ canaddhelperss BOOLEAN ┃
+┃ canaddhelpers BOOLEAN  ┃
 ┃ salt TEXT              ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━┛
 ```
