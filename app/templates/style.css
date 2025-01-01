@@ -1,1 +1,378 @@
 @import url("../assets/fonts/inter/inter.css");
+
+body {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+
+	min-width: 100vw;
+	min-height: 100vh;
+	height: 100vh;
+	max-height: fit-content;
+
+	margin: 0px;
+
+	padding: 0px;
+
+	background-color: #2A2A33;
+	color: #FFFFFF;
+
+	font-family: "Inter";
+	font-size: medium;
+
+	user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+span {
+	align-self: center;
+	padding-right: 15px;
+}
+
+p {
+	margin-top: 0px;
+	margin-bottom: 0px;
+
+	padding-left: 15px;
+}
+
+table {
+	width: 100%;
+	
+	margin-top: 3px;
+
+	padding: 15px;
+
+	border-radius: 15px;
+
+	background-color: #24242A;
+}
+th, td {
+	padding-top: 10px;
+	padding-bottom: 5px;
+
+	border-bottom: 1px dashed #FFFFFF60;
+
+	text-align: left;
+}
+
+img[disabled="true"] {
+	opacity: 0.5;
+}
+
+footer {
+	width: 100vw;
+
+	margin-top: 10px;
+
+	font-weight: 300;
+	font-size: small;
+
+	text-align: center;
+}
+footer::before {
+	content: "HSG Ticketing Version 1.0 by Borjan Valchanov";
+}
+
+input {
+	outline: none;
+	border: none;
+}
+input[type="checkbox"].on-monocard-interactable {
+	width: 25px;
+	height: 25px;
+
+	padding: 0px;
+
+	align-self: center;
+
+	outline: none;
+	border: none;
+
+	border-radius: 5px;
+
+	appearance: none;
+
+	background-image: url("../assets/checkmark.svg");
+	background-repeat: no-repeat;
+	background-size: 0px;
+	background-position: center;
+
+	transition: background-size 100ms, background-color 300ms;
+}
+input[type="checkbox"].on-monocard-interactable:checked {
+	background-color: #4A4ADA;
+	background-size: 20px;
+}
+input[type="checkbox"].on-monocard-interactable:checked:hover {
+	background-color: #6F6FFF;
+}
+input[type="number"].on-monocard-interactable {
+	min-width: 0px;
+	width: 55px;
+	height: calc(1em + 33px);
+	max-height: calc(1em + 33px);
+
+	box-sizing: border-box;
+
+	align-self: center;
+
+	text-align: center;
+
+	-moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+	margin: 0px;
+
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+button {
+	outline: none;
+	border: none;
+}
+button.on-monocard-interactable {
+	width: 100%;
+
+	background-color: #4A4ADA;
+	color: #FFFFFF;
+}
+button.on-monocard-interactable:hover {
+	background-color: #6F6FFF;
+	color: #FFFFFF;
+}
+button.on-monocard-interactable:active {
+	background-color: #AAAAFA;
+	color: #000000;
+}
+button.on-monocard-interactable:disabled, button.on-monocard-interactable:hover:disabled, button.on-monocard-interactable:active:disabled {
+	background-color: #4A4A70;
+	color: #FFFFFF80;
+}
+
+
+
+.pad { padding-left: 15px; }
+
+.on-monocard-spacer-large {
+	height: 40px;
+	width: 100%;
+}
+.on-monocard-spacer-small {
+	height: 20px;
+	width: 100%;
+}
+
+.on-monocard-title-primary {
+	margin-bottom: 0px;
+
+	display: grid;
+	grid-auto-flow: column;
+
+	font-weight: 600;
+	font-size: x-large;
+}
+
+.title-subtext {
+	margin-top: 0px;
+	margin-bottom: 6px;
+	
+	padding-top: 0px;
+
+	color: #D7D7D7;
+
+	font-size: small;
+	font-weight: 400;
+}
+
+.on-monocard-note {
+	margin-top: 3px;
+
+	padding: 10px;
+
+	border-radius: 15px;
+
+	box-shadow: 3px 0px #44444A inset;
+
+	background-color: #0A0A10;
+	color: #C4C4C4;
+
+	font-size: small;
+
+	align-content: center;
+	text-align: center;
+}
+.on-monocard-note-error {
+	box-shadow: 3px 0px #DF5A5A inset;
+
+	background-color: #8A0000;
+	color: #FFBABA;
+}
+
+.on-monocard-interactable {
+	width: calc(100% - 30px);
+
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 3px;
+
+	padding: 15px;
+
+	border-radius: 15px;
+
+	background-color: #24242A;
+	color: #FFFFFF;
+
+	transition: background-color 300ms, color 300ms;
+	transition-timing-function: ease-in-out;
+}
+.on-monocard-interactable:hover {
+	background-color: #45454B;
+}
+.on-monocard-interactable:active {
+	background-color: #67676E;
+}
+.on-monocard-interactable:disabled, .on-monocard-interactable:disabled:hover, .on-monocard-interactable:disabled:active, .on-monocard-interactable[disabled="true"] {
+	background-color: #24242A;
+	color: #FFFFFF80;
+}
+
+.ticket-input {
+	font-family: monospace;
+	font-size: xx-large;
+	letter-spacing: 0.25em;
+	text-transform: uppercase;
+}
+.ticket-input:disabled, .ticket-input:hover:disabled {
+	background-color: transparent;
+	color: #FFFFFF;
+}
+.ticket-input:disabled::placeholder {
+	color: transparent;
+}
+
+.ticket-option {
+	height: auto;
+	width: 1em;
+	aspect-ratio: 1/1;
+
+	display: grid;
+
+	font-size: xx-large;
+}
+
+.ticket-approved, .ticket-not-approved {
+	margin: 0px;
+	padding: 0px;
+
+	white-space: nowrap;
+}
+.ticket-approved::before {
+	content: "approved";
+}
+.ticket-not-approved::before {
+	content: "not approved";
+}
+.ticket-approved { color: #A0FF70; }
+.ticket-not-approved { color: #FF7070; }
+
+.row-option {
+	height: 1em;
+	width: 1em;
+
+	align-self: center;
+
+	display: grid;
+}
+
+.row-container {
+	margin-top: 5px;
+
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-columns: 1fr auto;
+	column-gap: 3px;
+	align-items: stretch;
+}
+
+.option-icon {
+	width: 20px;
+	height: 20px;
+
+	align-self: center;
+	justify-self: center;
+}
+
+.connect-up {
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.connect-right {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+.connect-down {
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+.connect-left {
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+
+
+#monocard {
+	min-width: fit-content;
+	min-width: 200px;
+	width: 80%;
+	max-width: 100%;
+	max-width: 800px;
+	height: fit-content;
+
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+
+	padding: 20px;
+
+	border-radius: 20px;
+
+	background-color: #17171F;
+}
+
+#title-navigate {
+	margin-left: auto;
+
+	width: calc(1em + 5px);
+	height: calc(1em + 5px);
+
+	border-radius: 10px;
+	
+	background-image: url("../assets/navigate.svg");
+	background-repeat: no-repeat;
+	background-size: 1em;
+	background-position: center;
+
+	align-self: center;
+
+	font-size: x-large;
+
+	transition: background-color 300ms;
+	transition-timing-function: ease-in-out;
+}
+#title-navigate:hover {
+	background-color: #FFFFFF48;
+}
+#title-navigate:active {
+	background-color: #FFFFFF70;
+}
+
+#ticket-status-message {
+	text-align: center;
+	font-size: xx-large;
+	font-weight: bold;
+}
