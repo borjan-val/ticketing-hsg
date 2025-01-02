@@ -31,16 +31,16 @@
 ┃ cansell BOOLEAN        ┃
 ┃ cancheck BOOLEAN       ┃
 ┃ canaddhelpers BOOLEAN  ┃
-┃ salt TEXT              ┃
+┃ salt bytea             ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━┛
 ```
 ```text
-┏━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Session              ┃
-┠──────────────────────┨
-┃ tokenid UUID PRIMARY ┃
-┃ expires DATE         ┃
-┃ eventid UUID         ┃
-┃ username TEXT        ┃
-┗━━━━━━━━━━━━━━━━━━━━━━┛
+┏━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Session               ┃
+┠───────────────────────┨
+┃ tokenid bytea PRIMARY ┃
+┃ expires DATE          ┃
+┃ eventid UUID          ┃
+┃ username TEXT         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━┛
 ```
