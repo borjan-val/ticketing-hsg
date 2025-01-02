@@ -36,7 +36,7 @@
 ```
 ```text
 ┏━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Session               ┃
+┃ Helpersession         ┃
 ┠───────────────────────┨
 ┃ tokenid bytea PRIMARY ┃
 ┃ expires DATE          ┃
