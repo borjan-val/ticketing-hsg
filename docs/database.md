@@ -4,7 +4,7 @@
 ┃ Event                ┃
 ┠──────────────────────┨
 ┃ eventid UUID PRIMARY ┃
-┃ name TEXT            ┃
+┃ eventname TEXT       ┃
 ┃ ticketstart DATE     ┃
 ┃ ticketend DATE       ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━┛
@@ -15,8 +15,8 @@
 ┠───────────────────────┨
 ┃ eventid UUID PRIMARY  ┃
 ┃ ticketid TEXT PRIMARY ┃
-┃ name TEXT             ┃
-┃ surname TEXT          ┃
+┃ tname TEXT            ┃
+┃ tsurname TEXT         ┃
 ┃ grade NUMBER          ┃
 ┃ paidfor BOOLEAN       ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
