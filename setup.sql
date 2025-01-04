@@ -14,7 +14,7 @@ CREATE TABLE ticket (
 	paidfor boolean DEFAULT FALSE NOT NULL,
 	PRIMARY KEY (teventid, ticketid),
 	CONSTRAINT fk_teventid FOREIGN KEY (teventid) REFERENCES tevent (teventid) ON DELETE RESTRICT ON UPDATE RESTRICT
-)
+);
 
 CREATE TABLE helper (
 	teventid uuid,
@@ -26,7 +26,7 @@ CREATE TABLE helper (
 	salt char(20) NOT NULL,
 	PRIMARY KEY (teventid, ticketid),
 	CONSTRAINT teventid_fk_or_decoupled CHECK (teventid = uuid '00000000-0000-0000-0000-000000000000' OR teventid IN (SELECT teventid FROM tevent))
-)
+);
 
 CREATE TABLE helpersession (
 	tokenid uuid DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -34,4 +34,4 @@ CREATE TABLE helpersession (
 	teventid uuid NOT NULL,
 	username text NOT NULL,
 	CONSTRAINT fk_helper FOREIGN KEY (teventid, username) REFERENCES helper (teventid, username) ON DELETE RESTRICT ON UPDATE RESTRICT
-)
+);
