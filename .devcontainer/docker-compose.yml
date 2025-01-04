@@ -4,6 +4,7 @@ services:
     image: mcr.microsoft.com/devcontainers/base:bullseye
     volumes:
       - ../..:/workspaces:cached
+      - ./aliases.sh:/home/vscode/.bash_aliases
     network_mode: service:db
     command: sleep infinity
 
