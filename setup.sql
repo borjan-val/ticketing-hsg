@@ -1,5 +1,5 @@
 CREATE TABLE tevent (
-	teventid uuid DEFAULT gen_random_uuid() PRIMARY KEY CONSTRAINT teventid_not_decoupled CHECK (eventid <> uuid '00000000-0000-0000-0000-000000000000'),
+	teventid uuid DEFAULT gen_random_uuid() PRIMARY KEY CONSTRAINT teventid_not_decoupled CHECK (teventid <> uuid '00000000-0000-0000-0000-000000000000'),
 	teventname text NOT NULL,
 	ticketstart timestamp NOT NULL,
 	ticketend timestamp NOT NULL
@@ -16,6 +16,12 @@ CREATE TABLE ticket (
 	CONSTRAINT fk_teventid FOREIGN KEY (teventid) REFERENCES tevent (teventid) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
+CREATE FUNCTION teventid_fk_or_decoupled_check(teventid uuid) RETURNS boolean
+LANGUAGE SQL
+IMMUTABLE
+RETURNS NULL ON NULL INPUT
+RETURN teventid = uuid '00000000-0000-0000-0000-000000000000' OR teventid IN (SELECT teventid FROM tevent);
+
 CREATE TABLE helper (
 	teventid uuid,
 	username text,
@@ -24,8 +30,8 @@ CREATE TABLE helper (
 	cancheck boolean DEFAULT FALSE NOT NULL,
 	canaddhelpers boolean DEFAULT FALSE NOT NULL,
 	salt char(20) NOT NULL,
-	PRIMARY KEY (teventid, ticketid),
-	CONSTRAINT teventid_fk_or_decoupled CHECK (teventid = uuid '00000000-0000-0000-0000-000000000000' OR teventid IN (SELECT teventid FROM tevent))
+	PRIMARY KEY (teventid, username),
+	CONSTRAINT teventid_fk_or_decoupled CHECK (teventid_fk_or_decoupled_check(teventid))
 );
 
 CREATE TABLE helpersession (

@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/base:bullseye
+    volumes:
+      - ../..:/workspaces:cached
+    network_mode: service:db
+    command: sleep infinity
+
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - ../setup.sql:/docker-entrypoint-initdb.d/dev-initdb.sql
+    environment:
+      POSTGRES_PASSWORD: ticketing-hsg
+      POSTGRES_USER: ticketing-hsg
+      POSTGRES_DB: ticketing-hsg
