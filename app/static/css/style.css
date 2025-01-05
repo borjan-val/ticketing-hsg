@@ -197,6 +197,9 @@ button.on-monocard-interactable:disabled, button.on-monocard-interactable:hover:
 	font-size: small;
 	font-weight: 400;
 }
+.title-subtext[disabled="true"] {
+	color: #D7D7D780;
+}
 
 .on-monocard-note {
 	margin-top: 3px;
