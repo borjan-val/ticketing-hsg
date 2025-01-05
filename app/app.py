@@ -1,9 +1,10 @@
-from flask import Flask
+from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID as SQLAlchemyUUID
 from sqlalchemy import CheckConstraint, ForeignKey, func, text, PrimaryKeyConstraint, ForeignKeyConstraint
 import uuid as python_uuid
 import secrets
+import json
 import os
 
 # Helper function to generate cryptographically secure UUIDs in Python
@@ -110,3 +111,23 @@ with app.app_context():
 	Ticket.__table__.create(db.engine)
 	Helper.__table__.create(db.engine)
 	Helpersession.__table__.create(db.engine)
+
+
+def load_all_locales():
+	locales = {}
+	for filename in os.listdir('locales'):
+		if filename.endswith('.json'):
+			language = filename[:-5]
+			try:
+				with open(f'locales/{filename}', 'r', encoding='utf-8') as f:
+					locales[language] = json.load(f)
+			except (json.JSONDecodeError, OSError) as e:
+				print(f"Error loading {filename}: {e}")
+	return locales
+
+locales = load_all_locales()
+
+def _(key):
+	language = request.accept_languages.best_match(locales.keys()) or 'en'
+	translations = locales.get(language, locales.get('en', {}))
+	return translations.get(key, f'[{key}]')
