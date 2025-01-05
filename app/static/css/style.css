@@ -106,6 +106,13 @@ input[type="checkbox"].on-monocard-interactable:checked {
 input[type="checkbox"].on-monocard-interactable:checked:hover {
 	background-color: #6F6FFF;
 }
+input[type="checkbox"].on-monocard-interactable:disabled, input[type="checkbox"].on-monocard-interactable:hover:disabled, input[type="checkbox"].on-monocard-interactable:active:disabled {
+	background-color: #24242A;
+}
+input[type="checkbox"].on-monocard-interactable:disabled:checked, input[type="checkbox"].on-monocard-interactable:hover:disabled:checked, input[type="checkbox"].on-monocard-interactable:active:disabled:checked {
+	background-color: #4A4ADA;
+	opacity: 0.7;
+}
 input[type="number"].on-monocard-interactable {
 	min-width: 0px;
 	width: 55px;
@@ -147,6 +154,12 @@ button.on-monocard-interactable:active {
 }
 button.on-monocard-interactable:disabled, button.on-monocard-interactable:hover:disabled, button.on-monocard-interactable:active:disabled {
 	background-color: #4A4A70;
+	color: #FFFFFF80;
+}
+
+
+
+[disabled="true"] {
 	color: #FFFFFF80;
 }
 
