@@ -2,18 +2,20 @@ version: '3.8'
 services:
   devcontainer:
     image: mcr.microsoft.com/devcontainers/base:bullseye
+    ports:
+      - "8080:80"
     volumes:
       - ../..:/workspaces:cached
       - ./aliases.sh:/home/vscode/.bash_aliases
-    network_mode: service:db
     command: sleep infinity
 
   db:
     image: postgres:latest
     restart: unless-stopped
     volumes:
-      - ../setup.sql:/docker-entrypoint-initdb.d/dev-initdb.sql
+      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    network_mode: service:devcontainer
     environment:
-      POSTGRES_PASSWORD: ticketing-hsg
-      POSTGRES_USER: ticketing-hsg
-      POSTGRES_DB: ticketing-hsg
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
