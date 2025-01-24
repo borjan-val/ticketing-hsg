@@ -1,34 +1,25 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>HSG Ticketing - Login</title>
-		<meta charset="utf-8"/>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<link rel="stylesheet" href="style.css"/>
-	</head>
-	<body>
-		<div id="monocard">
-			<div class="on-monocard-title-primary">
-				Log into a Helper account
-				<div id="title-navigate"></div>
-			</div>
-			<div class="title-subtext">for "Example event"</div>
-			<div class="on-monocard-spacer-small"></div>
-			<div class="on-monocard-note connect-down">Your login session expired</div>
-			<div class="on-monocard-note connect-up connect-down">You were signed out successfully</div>
-			<div class="on-monocard-note on-monocard-note-error connect-up">Wrong username or password, please try again</div>
-			<div class="on-monocard-spacer-small"></div>
-			<input class="on-monocard-interactable connect-down" placeholder="Username"/><br/>
-			<input class="on-monocard-interactable connect-up" type="password" placeholder="Password"/>
-			<div class="on-monocard-spacer-small"></div>
-			<div class="row-container">
-				<span>My account is not coupled to a specific event</span>
-				<input type="checkbox" class="on-monocard-interactable"/>
-			</div>
-			<div class="on-monocard-spacer-small"></div>
-			<button class="on-monocard-interactable">Log in</button>
-		</div>
-		<footer></footer>
-	</body>
-</html>
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block title %}
+{{ _("login.title") }}
+{% endblock %}
+
+{% block subtitle %}
+{{ _("forevent") | replace("$$EVENTNAME$$", eventname) if event_selected else _("noevent") }}
+{% endblock %}
+
+{% block content %}
+{{ macros.note_error(id="invalid-login-note", text=_("login.invalid")) }}
+{{ macros.note_error(id="miscerror-note", text=_("miscerror")) }}
+{{ macros.spacer_small() }}
+<form id="login-form">
+{{ macros.textbox(id="username", placeholder=_("account.username"), connect_down=True) }}
+{{ macros.textbox(id="password", placeholder=_("create-helper-account.password"), password=True, connect_up=True) }}
+{{ macros.spacer_small() }}
+{{ macros.checkbox(id="decoupled", text=_("login.decoupled"), checked=(not event_selected), disabled=(not event_selected)) }}
+{{ macros.spacer_small() }}
+{{ macros.button(id="login-submit", text=_("login.confirm"), is_submit=True, disabled=True) }}
+</form>
+{% endblock %}

@@ -1,35 +1,28 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>HSG Ticketing - Create event</title>
-		<meta charset="utf-8"/>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<link rel="stylesheet" href="style.css"/>
-	</head>
-	<body>
-		<div id="monocard">
-			<div class="on-monocard-title-primary">
-				Create a new event
-				<div id="title-navigate"></div>
-			</div>
-			<div class="title-subtext">Create a new event to manage with HSG Ticketing</div>
-			<div class="on-monocard-spacer-small"></div>
-			<input class="on-monocard-interactable" placeholder="Event name"/><br/>
-			<div class="on-monocard-spacer-small"></div>
-			<div class="row-container">
-				<span class="pad">Ticket sale start</span>
-				<input class="on-monocard-interactable" type="date"/>
-				<input class="on-monocard-interactable" type="time"/>
-			</div>
-			<div class="row-container">
-				<span class="pad">Ticket sale end</span>
-				<input class="on-monocard-interactable" type="date"/>
-				<input class="on-monocard-interactable" type="time"/>
-			</div>
-			<div class="on-monocard-spacer-small"></div>
-			<button class="on-monocard-interactable">Create event</button>
-		</div>
-		<footer></footer>
-	</body>
-</html>
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block title %}
+{{ _("create-event.title") }}
+{% endblock %}
+
+{% block subtitle %}
+{{ _("create-event.subtitle") }}
+{% endblock %}
+
+{% block content %}
+<form id="create-event-form">
+<div class="row-container">
+	<span class="pad">{{ _("create-event.ticketstart") }}</span>
+	<input class="on-monocard-interactable" type="date" id="ticketstart-date"/>
+	<input class="on-monocard-interactable" type="time" id="ticketstart-time"/>
+</div>
+<div class="row-container">
+	<span class="pad">{{ _("create-event.ticketend") }}</span>
+	<input class="on-monocard-interactable" type="date" id="ticketend-date"/>
+	<input class="on-monocard-interactable" type="time" id="ticketend-time"/>
+</div>
+{{ macros.spacer_small() }}
+{{ macros.button(id="create-event-submit", text=_("create-event.title"), is_submit=True, disabled=True) }}
+</form>
+{% endblock %}

@@ -26,7 +26,23 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
 db = SQLAlchemy(app)
 
-# Custom constraint for Helper UUIDs
+# Dummy function for initial table creation
+dummy_function = text("""
+DO $$
+BEGIN
+	CREATE FUNCTION teventid_fk_or_decoupled_check(teventid uuid) 
+	RETURNS boolean
+	LANGUAGE SQL
+	IMMUTABLE
+	RETURNS NULL ON NULL INPUT
+	RETURN TRUE;
+EXCEPTION
+	WHEN duplicate_function THEN
+		NULL; -- Do nothing if the function already exists
+END $$;
+""")
+
+# Actual function definition
 teventid_fk_or_decoupled_check = text("""
 CREATE OR REPLACE FUNCTION teventid_fk_or_decoupled_check(teventid uuid) 
 RETURNS boolean
@@ -99,18 +115,18 @@ class Helpersession(db.Model):
 
 # Ensure the application context is available for database operations
 with app.app_context():
-	# Step 1: Create the `tevent` table
-	Tevent.__table__.create(db.engine)
+	# Step 1: Create the dummy function with exception handling
+	with db.engine.connect() as connection:
+		connection.execute(dummy_function)
+		connection.commit()
 	
-	# Step 2: Create the custom PostgreSQL function
+	# Step 2: Create all tables using create_all
+	db.create_all()
+	
+	# Step 3: Replace the dummy function with the actual implementation
 	with db.engine.connect() as connection:
 		connection.execute(teventid_fk_or_decoupled_check)
 		connection.commit()
-	
-	# Step 3: Create the remaining tables (`ticket`, `helper`, and `helpersession`)
-	Ticket.__table__.create(db.engine)
-	Helper.__table__.create(db.engine)
-	Helpersession.__table__.create(db.engine)
 
 
 def load_all_locales():
@@ -131,3 +147,75 @@ def _(key):
 	language = request.accept_languages.best_match(locales.keys()) or 'en'
 	translations = locales.get(language, locales.get('en', {}))
 	return translations.get(key, f'[{key}]')
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+	return render_template('404.html', _=_), 404
+
+@app.route("/test/account/")
+def account_test():
+	return render_template(
+		'account.html',
+		_=_,
+		forevent="Example event A",
+		username="testuser",
+		cansell=True,
+		cancheck=True,
+		canaddhelpers=True
+	)
+
+@app.route("/test/change-password/")
+def change_password_test():
+	return render_template(
+		'change-password.html',
+		_=_,
+		username="testuser"
+	)
+
+@app.route("/test/create-event/")
+def create_event_test():
+	return render_template(
+		'create-event.html',
+		_=_
+	)
+
+@app.route("/test/create-helper/")
+def create_helper_test():
+	return render_template(
+		'create-helper-account.html',
+		_=_,
+		eventname="Example event A"
+	)
+
+@app.route("/test/event-management/")
+def event_management_test():
+	return render_template(
+		'event-management.html',
+		_=_
+	)
+
+@app.route("/test/event-picker/")
+def event_picker_test():
+	return render_template(
+		'event-picker.html',
+		_=_,
+		currently_selling=[
+			("Example event A", "0000-01-01", "9999-12-31"),
+			("Example event B", "0000-01-01", "9999-12-31"),
+			("Example event C", "0000-01-01", "9999-12-31")
+		],
+		not_currently_selling=[
+			("Example event D", "1969-12-31", "1970-01-01"),
+			("Example event E", "1969-12-31", "1970-01-01"),
+			("Example event F", "1969-12-31", "1970-01-01")
+		]
+	)
+
+@app.route("/test/login/")
+def login_test():
+	return render_template(
+		'login.html',
+		_=_,
+		event_selected=False
+	)

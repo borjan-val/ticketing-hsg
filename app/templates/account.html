@@ -1,49 +1,42 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>HSG Ticketing - My Helper account</title>
-		<meta charset="utf-8"/>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<link rel="stylesheet" href="style.css"/>
-	</head>
-	<body>
-		<div id="monocard">
-			<div class="on-monocard-title-primary">
-				My Helper account
-				<div id="title-navigate"></div>
-			</div>
-			<div class="title-subtext">username</div>
-			<div class="on-monocard-spacer-small"></div>
-			<table>
-				<tr>
-					<th>Helper for event</th>
-					<td>Example event A</td>
-				</tr>
-				<tr>
-					<th>User name</th>
-					<td>username</td>
-				</tr>
-			</table>
-			<div class="on-monocard-spacer-small"></div>
-			<table>
-				<tr>
-					<th>Can mark tickets as paid</th>
-					<td>Allowed</td>
-				</tr>
-				<tr>
-					<th>Can see additional ticket info</th>
-					<td>Allowed</td>
-				</tr>
-				<tr>
-					<th>Can add new Helpers</th>
-					<td>Not allowed</td>
-				</tr>
-			</table>
-			<div class="on-monocard-spacer-small"></div>
-			<button class="on-monocard-interactable connect-down">Change password</button>
-			<button class="on-monocard-interactable connect-up">Sign out all login sessions</button>
-		</div>
-		<footer></footer>
-	</body>
-</html>
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block title %}
+{{ _("account.title") }}
+{% endblock %}
+
+{% block subtitle %}
+{{ username }}
+{% endblock %}
+
+{% block content %}
+<table>
+	<tr>
+		<th>{{ _("account.forevent") }}</th>
+		<td>{{ forevent }}</td>
+	</tr>
+	<tr>
+		<th>{{ _("account.username") }}</th>
+		<td>{{ username }}</td>
+	</tr>
+</table>
+{{ macros.spacer_small() }}
+<table>
+	<tr>
+		<th>{{ _("account.cansell") }}</th>
+		<td>{{ _("account.allowed") if cansell else _("account.notallowed") }}</td>
+	</tr>
+	<tr>
+		<th>{{ _("account.cancheck") }}</th>
+		<td>{{ _("account.allowed") if cancheck else _("account.notallowed") }}</td>
+	</tr>
+	<tr>
+		<th>{{ _("account.canaddhelpers") }}</th>
+		<td>{{ _("account.allowed") if canaddhelpers else _("account.notallowed") }}</td>
+	</tr>
+</table>
+{{ macros.spacer_small() }}
+{{ macros.button(id="redirect-change-password", text=_("account.changepassword"), connect_down=True) }}
+{{ macros.button(id="sign-out-all", text=_("account.signoutall"), connect_up=True) }}
+{% endblock %}

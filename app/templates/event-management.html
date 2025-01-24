@@ -1,28 +1,16 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>HSG Ticketing - Event management</title>
-		<meta charset="utf-8"/>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<link rel="stylesheet" href="style.css"/>
-	</head>
-	<body>
-		<div id="monocard">
-			<div class="on-monocard-title-primary">
-				Event management
-				<div id="title-navigate"></div>
-			</div>
-			<div class="title-subtext">How would you like to proceed?</div><div class="on-monocard-spacer-small"></div>
-			<div class="on-monocard-interactable row-container connect-down">
-				<span>Add a new Helper account for "Example event A"</span>
-				<img src="../assets/account.svg" class="option-icon"/>
-			</div>
-			<div class="on-monocard-interactable row-container connect-up">
-				<span>Create a new event</span>
-				<img src="../assets/event.svg" class="option-icon"/>
-			</div>
-		</div>
-		<footer></footer>
-	</body>
-</html>
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block title %}
+{{ _("event-management.title") }}
+{% endblock %}
+
+{% block subtitle %}
+{{ _("event-management.subtitle") }}
+{% endblock %}
+
+{% block content %}
+{{ macros.navoption(text=_("create-helper-account.title"), icon="assets/icons/account.svg", connect_down=True) }}
+{{ macros.navoption(text=_("create-event.title"), icon="assets/icons/event.svg", connect_up=True) }}
+{% endblock %}
