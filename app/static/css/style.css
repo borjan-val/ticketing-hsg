@@ -350,6 +350,9 @@ button.on-monocard-interactable:disabled, button.on-monocard-interactable:hover:
 
 	background-color: #17171F;
 }
+#monocard * {
+	transition: all 300ms ease-in-out;
+}
 
 #title-navigate {
 	margin-left: auto;
