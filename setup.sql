@@ -16,7 +16,8 @@ CREATE TABLE ticket (
 	CONSTRAINT fk_teventid FOREIGN KEY (teventid) REFERENCES tevent (teventid) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-CREATE FUNCTION teventid_fk_or_decoupled_check(teventid uuid) RETURNS boolean
+CREATE OR REPLACE FUNCTION teventid_fk_or_decoupled_check(teventid uuid)
+RETURNS boolean
 LANGUAGE SQL
 IMMUTABLE
 RETURNS NULL ON NULL INPUT
