@@ -58,7 +58,7 @@ th, td {
 	text-align: left;
 }
 
-img[disabled="true"] {
+img.interact-disabled {
 	opacity: 0.5;
 }
 
@@ -106,10 +106,10 @@ input[type="checkbox"].on-monocard-interactable:checked {
 input[type="checkbox"].on-monocard-interactable:checked:hover {
 	background-color: #6F6FFF;
 }
-input[type="checkbox"].on-monocard-interactable:disabled, input[type="checkbox"].on-monocard-interactable:hover:disabled, input[type="checkbox"].on-monocard-interactable:active:disabled {
+input[type="checkbox"].on-monocard-interactable.interact-disabled, input[type="checkbox"].on-monocard-interactable.interact-disabled:hover, input[type="checkbox"].on-monocard-interactable.interact-disabled:active {
 	background-color: #24242A;
 }
-input[type="checkbox"].on-monocard-interactable:disabled:checked, input[type="checkbox"].on-monocard-interactable:hover:disabled:checked, input[type="checkbox"].on-monocard-interactable:active:disabled:checked {
+input[type="checkbox"].on-monocard-interactable.interact-disabled:checked, input[type="checkbox"].on-monocard-interactable.interact-disabled:hover:checked, input[type="checkbox"].on-monocard-interactable.interact-disabled:active:checked {
 	background-color: #4A4ADA;
 	opacity: 0.7;
 }
@@ -152,18 +152,21 @@ button.on-monocard-interactable:active {
 	background-color: #AAAAFA;
 	color: #000000;
 }
-button.on-monocard-interactable:disabled, button.on-monocard-interactable:hover:disabled, button.on-monocard-interactable:active:disabled {
+button.on-monocard-interactable.interact-disabled, button.on-monocard-interactable.interact-disabled:hover, button.on-monocard-interactable.interact-disabled:active {
 	background-color: #4A4A70;
 	color: #FFFFFF80;
 }
 
 
 
-[disabled="true"] {
-	color: #FFFFFF80;
+.collapsed-vertical {
+	height: 0px;
+	opacity: 0;
 }
 
-
+.interact-disabled {
+	color: #FFFFFF80;
+}
 
 .pad { padding-left: 15px; }
 
@@ -197,7 +200,7 @@ button.on-monocard-interactable:disabled, button.on-monocard-interactable:hover:
 	font-size: small;
 	font-weight: 400;
 }
-.title-subtext[disabled="true"] {
+.title-subtext.interact-disabled {
 	color: #D7D7D780;
 }
 
@@ -248,7 +251,7 @@ button.on-monocard-interactable:disabled, button.on-monocard-interactable:hover:
 .on-monocard-interactable:active {
 	background-color: #67676E;
 }
-.on-monocard-interactable:disabled, .on-monocard-interactable:disabled:hover, .on-monocard-interactable:disabled:active, .on-monocard-interactable[disabled="true"] {
+.on-monocard-interactable.interact-disabled, .on-monocard-interactable.interact-disabled:hover, .on-monocard-interactable.interact-disabled:active {
 	background-color: #24242A;
 	color: #FFFFFF80;
 }
@@ -259,11 +262,11 @@ button.on-monocard-interactable:disabled, button.on-monocard-interactable:hover:
 	letter-spacing: 0.25em;
 	text-transform: uppercase;
 }
-.ticket-input:disabled, .ticket-input:hover:disabled {
+.ticket-input.interact-disabled, .ticket-input.interact-disabled:hover {
 	background-color: transparent;
 	color: #FFFFFF;
 }
-.ticket-input:disabled::placeholder {
+.ticket-input.interact-disabled::placeholder {
 	color: transparent;
 }
 
