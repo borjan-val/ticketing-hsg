@@ -3,58 +3,62 @@
 {% endmacro %}
 
 {% macro note(id, text, hidden=False, connect_up=False, connect_down=False) %}
-<div id="{{ id }}" class="on-monocard-note {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %}" {% if hidden %}hidden{% endif %}>{{ text }}</div>
+<div id="{{ id }}" class="on-monocard-note {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if hidden %}collapsed-vertical{% endif %}">{{ text }}</div>
 {% endmacro %}
 
 {% macro note_error(id, text, hidden=True, connect_up=False, connect_down=False) %}
-<div id="{{ id }}" class="on-monocard-note on-monocard-note-error {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %}" {% if hidden %}hidden{% endif %}>{{ text }}</div>
+<div id="{{ id }}" class="on-monocard-note on-monocard-note-error {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if hidden %}collapsed-vertical{% endif %}">{{ text }}</div>
 {% endmacro %}
 
 {% macro textbox(id, placeholder, value="", password=False, disabled=False, connect_up=False, connect_down=False) %}
-<input id="{{ id }}" class="on-monocard-interactable {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %}" placeholder="{{ placeholder }}" value="{{ value }}" {% if disabled %}disabled{% endif %} {% if password %}type="password"{% endif %}/><br/>
+<input id="{{ id }}" class="on-monocard-interactable {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if disabled %}interact-disabled{% endif %}" placeholder="{{ placeholder }}" value="{{ value }}" {% if disabled %}disabled{% endif %} {% if password %}type="password"{% endif %}/><br/>
 {% endmacro %}
 
 {% macro button(id, text, is_submit=False, disabled=False, connect_up=False, connect_down=False) %}
-<button id="{{ id }}" class="on-monocard-interactable {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %}" {% if disabled %}disabled{% endif %} {% if is_submit %}type="submit"{% endif %}>{{ text }}</button>
+<button id="{{ id }}" class="on-monocard-interactable {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if disabled %}interact-disabled{% endif %}" {% if disabled %}disabled{% endif %} {% if is_submit %}type="submit"{% endif %}>{{ text }}</button>
 {% endmacro %}
 
 {% macro checkbox(id, text, description="", checked=False, disabled=False) %}
 <div class="row-container">
-	<span {% if disabled %}disabled="true"{% endif %}>
+	<span {% if disabled %}class="interact-disabled"{% endif %}>
 		{{ text }}
 		{% if description %}
 		<br/>
 		<div class="title-subtext">{{ description }}</div>
 		{% endif %}
 	</span>
-	<input id="{{ id }}" type="checkbox" class="on-monocard-interactable" {% if checked %}checked{% endif %} {% if disabled %}disabled{% endif %}/>
+	<input id="{{ id }}" type="checkbox" class="on-monocard-interactable {% if disabled %}interact-disabled{% endif %}" {% if checked %}checked{% endif %} {% if disabled %}disabled{% endif %}/>
 </div>
 {% endmacro %}
 
 {% macro navoption(text, description="", icon="assets/icons/arrow.svg", disabled=False, connect_up=False, connect_down=False) %}
-<div class="on-monocard-interactable row-container {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %}" {% if disabled %}disabled="true"{% endif %}>
-	<span {% if disabled %}disabled="true"{% endif %}>
+<div class="on-monocard-interactable row-container {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if disabled %}interact-disabled{% endif %}">
+	<span {% if disabled %}class="interact-disabled"{% endif %}>
 		{{ text }}
 		{% if description %}
 		<br/>
-		<div class="title-subtext" {% if disabled %}disabled="true"{% endif %}>{{ description }}</div>
+		<div class="title-subtext {% if disabled %}interact-disabled{% endif %}">{{ description }}</div>
 		{% endif %}
 	</span>
-	<img src="{{ url_for('static', filename=icon) }}" class="option-icon" {% if disabled %}disabled="true"{% endif %}/>
+	<img src="{{ url_for('static', filename=icon) }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/>
 </div>
 {% endmacro %}
 
 {% macro ticketinput(id, value="", disable_input=False, disable_clear=False, disable_qr=True) %}
-<input id="{{ id }}" class="on-monocard-interactable ticket-input connect-right" placeholder="ABC123" value="{{ value }}" maxlength="6" {% if disable_input %}disabled="true"{% endif %}/>
-<div class="on-monocard-interactable ticket-option connect-left connect-right"><img src="../static/assets/icons/delete.svg" class="option-icon" {% if disable_clear %}disabled="true"{% endif %}/></div>
-<div class="on-monocard-interactable ticket-option connect-left"><img src="../static/assets/icons/qrcode.svg" class="option-icon" {% if disable_qr %}disabled="true"{% endif %}/></div>
+<div>
+	<input id="{{ id }}" class="on-monocard-interactable ticket-input connect-right {% if disable_input %}interact-disabled{% endif %}" placeholder="ABC123" value="{{ value }}" maxlength="6" {% if disable_input %}disabled{% endif %}/>
+	<div id="{{ id }}-clear" class="on-monocard-interactable ticket-option connect-left connect-right {% if disable_clear %}interact-disabled{% endif %}"><img src="../static/assets/icons/delete.svg" class="option-icon {% if disable_clear %}interact-disabled{% endif %}"/></div>
+	<div id="{{ id }}-qr" class="on-monocard-interactable ticket-option connect-left {% if disable_qr %}interact-disabled{% endif %}"><img src="../static/assets/icons/qrcode.svg" class="option-icon {% if disable_qr %}interact-disabled{% endif %}"/></div>
+</div>
 {% endmacro %}
 
 {% macro numberinput(id, text, value, min=1, max=13, step=1, disabled=False) %}
-<span>{{ text }}</span>
-<div class="on-monocard-interactable row-option connect-right" {% if disabled %}disabled="true"{% endif %}><img src="../static/assets/icons/minus.svg" class="option-icon" {% if disabled %}disabled="true"{% endif %}/></div>
-<input id="{{ id }}" class="on-monocard-interactable connect-left connect-right" type="number" {% if value %}value="{{ value }}"{% endif %} min="{{ min }}" max="{{ max }}" step="{{ step }}" {% if disabled %}disabled{% endif %}/>
-<div class="on-monocard-interactable row-option connect-left" {% if disabled %}disabled="true"{% endif %}><img src="../static/assets/icons/plus.svg" class="option-icon" {% if disabled %}disabled="true"{% endif %}/></div>
+<div class="row-container">
+	<span>{{ text }}</span>
+	<div class="on-monocard-interactable row-option connect-right {% if disabled %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/minus.svg') }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/></div>
+	<input id="{{ id }}" class="on-monocard-interactable connect-left connect-right {% if disabled %}interact-disabled{% endif %}" type="number" {% if value %}value="{{ value }}"{% endif %} min="{{ min }}" max="{{ max }}" step="{{ step }}" {% if disabled %}disabled{% endif %}/>
+	<div class="on-monocard-interactable row-option connect-left {% if disabled %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/plus.svg') }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/></div>
+</div>
 {% endmacro %}
 
 {% macro ticketvalidity(outer_text, inner_text, is_valid) %}
