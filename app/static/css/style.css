@@ -161,6 +161,11 @@ button.on-monocard-interactable.interact-disabled, button.on-monocard-interactab
 
 .collapsed-vertical {
 	height: 0px;
+
+	margin: 0px;
+
+	padding: 0px;
+
 	opacity: 0;
 }
 
@@ -226,6 +231,10 @@ button.on-monocard-interactable.interact-disabled, button.on-monocard-interactab
 
 	background-color: #8A0000;
 	color: #FFBABA;
+}
+.on-monocard-note.collapsed-vertical, .on-monocard-note-error.collapsed-vertical {
+	margin: 0px;
+	padding: 0px;
 }
 
 .on-monocard-interactable {
