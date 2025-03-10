@@ -31,7 +31,11 @@
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
-			"extensions": ["ms-python.python", "samuelcolvin.jinjahtml", "cweijan.vscode-postgresql-client2"]
+			"settings": {
+				// Prevent VSCode from automatically publishing the HTTP port of the application container
+				"remote.autoForwardPorts": false
+			},
+			"extensions": ["ms-python.python", "samuelcolvin.jinjahtml", "cweijan.vscode-postgresql-client2", "william-voyek.vscode-nginx"]
 		}
 	}
 
