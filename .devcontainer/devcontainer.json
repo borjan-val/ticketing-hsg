@@ -25,6 +25,9 @@
 	// Please instead configure port mappings in docker-compose.yml as that ensures predictability of the host port
 	// "forwardPorts": [],
 
+	// Create local development TLS certificates
+	"onCreateCommand": ". .devcontainer/newcert.sh",
+
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "pip install -r app/requirements.txt",
 
