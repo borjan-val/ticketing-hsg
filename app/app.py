@@ -2,16 +2,8 @@ from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID as SQLAlchemyUUID
 from sqlalchemy import CheckConstraint, ForeignKey, func, text, PrimaryKeyConstraint, ForeignKeyConstraint
-import uuid as python_uuid
-import secrets
 import json
 import os
-
-# CSPRNG for UUIDs
-# See https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator
-# See https://docs.python.org/3/library/secrets.html
-def python_secure_uuid4():
-	return python_uuid.UUID(bytes=secrets.token_bytes(16))
 
 # Retrieve database connection details from environment variables
 db_username = os.getenv('DB_USERNAME')
@@ -61,23 +53,19 @@ RETURNS NULL ON NULL INPUT
 RETURN teventid = uuid '00000000-0000-0000-0000-000000000000' OR teventid IN (SELECT teventid FROM tevent);
 """)
 
-# Represents the `tevent` table in the database
 class Tevent(db.Model):
-	__tablename__ = 'tevent'
-	
-	teventid = db.Column(SQLAlchemyUUID(as_uuid=True), primary_key=True, default=python_secure_uuid4, server_default=text('gen_random_uuid()'))
+	teventid = db.Column(SQLAlchemyUUID(as_uuid=True), primary_key=True, server_default=text('gen_random_uuid()'))
 	teventname = db.Column(db.Text, nullable=False)
 	ticketstart = db.Column(db.DateTime, nullable=False)
 	ticketend = db.Column(db.DateTime, nullable=False)
 	
 	__table_args__ = (
-		CheckConstraint('teventid <> uuid \'00000000-0000-0000-0000-000000000000\'', name='teventid_not_decoupled'), # This period at the end here is absolutely stupid but necessary. `__table_args__` needs to be a tuple, which can't have size 1 in Python. Fuck Python. Also yes, this line is far longer than the 80 columns recommended by K&R. Well, this isn't the Linux kernel, so deal with it.
+		CheckConstraint('teventid <> uuid \'00000000-0000-0000-0000-000000000000\'', name='teventid_not_decoupled'), # This comma at the end here is absolutely stupid but necessary. `__table_args__` needs to be a tuple, which can't have size 1 in Python. Fuck Python. Also yes, this line is far longer than the 80 columns recommended by K&R. Well, this isn't the Linux kernel, so deal with it.
 	)
-
-# Represents the `ticket` table in the database
-class Ticket(db.Model):
-	__tablename__ = 'ticket'
 	
+	helpers = db.relationship('Helper', backref='event', viewonly=True)
+
+class Ticket(db.Model):
 	teventid = db.Column(SQLAlchemyUUID(as_uuid=True))
 	ticketid = db.Column(db.CHAR(6))
 	tname = db.Column(db.Text, nullable=False)
@@ -92,10 +80,7 @@ class Ticket(db.Model):
 	
 	tevent = db.relationship('Tevent', backref='tickets')
 
-# Represents the `helper` table in the database
 class Helper(db.Model):
-	__tablename__ = 'helper'
-	
 	teventid = db.Column(SQLAlchemyUUID(as_uuid=True))
 	username = db.Column(db.Text)
 	spasshashdigest = db.Column(db.CHAR(64), nullable=False)
@@ -109,23 +94,22 @@ class Helper(db.Model):
 		CheckConstraint('teventid_fk_or_decoupled_check(teventid)', name='teventid_fk_or_decoupled')
 	)
 
-# Represents the `helpersession` table in the database
 class Helpersession(db.Model):
-	__tablename__ = 'helpersession'
-	
-	tokenid = db.Column(SQLAlchemyUUID(as_uuid=True), primary_key=True, default=python_secure_uuid4, server_default=text('gen_random_uuid()'))
+	tokenid = db.Column(SQLAlchemyUUID(as_uuid=True), primary_key=True, server_default=text('gen_random_uuid()'))
 	expires = db.Column(db.DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP + interval \'P0000-00-14T00:00:00\''))
 	teventid = db.Column(SQLAlchemyUUID(as_uuid=True), nullable=False)
 	username = db.Column(db.Text, nullable=False)
 	
 	__table_args__ = (
-		ForeignKeyConstraint(['teventid', 'username'], ['helper.teventid', 'helper.username'], name='fk_helper', ondelete='RESTRICT', onupdate='RESTRICT'),
+		ForeignKeyConstraint(['teventid', 'username'], ['helper.teventid', 'helper.username'], name='fk_helper', ondelete='RESTRICT', onupdate='RESTRICT'), # See line 64 for why this comma is here
 	)
+	
+	helper = db.relationship('Helper', backref='helpersessions')
 
 # Setup the database
 with app.app_context():
 	# Create the dummy function if the real one is not defined.
-	# For details on this shitty workaround, check lines 31+.
+	# For details on this shitty workaround, check lines 23+.
 	with db.engine.connect() as connection:
 		connection.execute(teventid_fk_or_decoupled_check_dummy)
 		connection.commit()
