@@ -136,26 +136,25 @@ with app.app_context():
 		connection.execute(teventid_fk_or_decoupled_check)
 		connection.commit()
 
+# Load locales
+locales = {}
+for filename in os.listdir('locales'):
+	if filename.endswith('.json'):
+		language = filename[:-5] # Remove the .json file extension
+		try:
+			with open(f'locales/{filename}', 'r', encoding='utf-8') as f:
+				locales[language] = json.load(f)
+		except (json.JSONDecodeError, OSError) as e:
+			print(f"Error loading {filename}: {e}")
 
-def load_all_locales():
-	locales = {}
-	for filename in os.listdir('locales'):
-		if filename.endswith('.json'):
-			language = filename[:-5] # Remove the .json file extension
-			try:
-				with open(f'locales/{filename}', 'r', encoding='utf-8') as f:
-					locales[language] = json.load(f)
-			except (json.JSONDecodeError, OSError) as e:
-				print(f"Error loading {filename}: {e}")
-	return locales
-
-locales = load_all_locales()
-
+# Compact little function to get the localized string for a key string (e.g. "noevent" -> "No event selected")
+# Use only in request contexts!
 def _(key):
-	language = request.accept_languages.best_match(locales.keys()) or 'en'
-	translations = locales.get(language, locales.get('en', {}))
-	return translations.get(key, f'[{key}]')
-
+	# Language of the returned string is defined by browser headers, defaults to English
+	lang = request.accept_languages.best_match(locales.keys()) or 'en'
+	# Get the requested translation from the dictionary of the determined language,
+	# or return the key if no translation was found 
+	return locales.get(lang, {}).get(key, key)
 
 @app.errorhandler(404)
 def page_not_found(error):
