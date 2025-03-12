@@ -141,7 +141,7 @@ def load_all_locales():
 	locales = {}
 	for filename in os.listdir('locales'):
 		if filename.endswith('.json'):
-			language = filename[:-5]
+			language = filename[:-5] # Remove the .json file extension
 			try:
 				with open(f'locales/{filename}', 'r', encoding='utf-8') as f:
 					locales[language] = json.load(f)
