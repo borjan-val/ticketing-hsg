@@ -7,7 +7,9 @@ import secrets
 import json
 import os
 
-# Helper function to generate cryptographically secure UUIDs in Python
+# CSPRNG for UUIDs
+# See https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator
+# See https://docs.python.org/3/library/secrets.html
 def python_secure_uuid4():
 	return python_uuid.UUID(bytes=secrets.token_bytes(16))
 
@@ -18,16 +20,23 @@ db_host = os.getenv('DB_HOST')
 db_port = os.getenv('DB_PORT')
 db_name = os.getenv('DB_NAME')
 
-# Construct the connection string for psycopg3
+# Construct database connection string
 connection_string = f"postgresql+psycopg://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
 
-# Initialize the Flask application and configure the database connection
+# Initialize the Flask application and connect to the database
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
 db = SQLAlchemy(app)
 
-# Dummy function for initial table creation
-dummy_function = text("""
+# For information concerning the database layout as represented by SQLAlchemy
+# syntax below, consult the technical documentation of the repository.
+
+# SQLAlchemy can only create all tables at once safely
+# and the database has both a table the function depends on (`tevent`)
+# and a table that depends on this function (`helper`),
+# so we define a dummy function to avoid getting an error
+# when creating our tables because of an unsatisfied dependency function.
+teventid_fk_or_decoupled_check_dummy = text("""
 DO $$
 BEGIN
 	CREATE FUNCTION teventid_fk_or_decoupled_check(teventid uuid) 
@@ -38,11 +47,11 @@ BEGIN
 	RETURN TRUE;
 EXCEPTION
 	WHEN duplicate_function THEN
-		NULL; -- Do nothing if the function already exists
+		NULL;
 END $$;
 """)
 
-# Actual function definition
+# This is the actual function, we replace the dummy function.
 teventid_fk_or_decoupled_check = text("""
 CREATE OR REPLACE FUNCTION teventid_fk_or_decoupled_check(teventid uuid) 
 RETURNS boolean
@@ -62,7 +71,7 @@ class Tevent(db.Model):
 	ticketend = db.Column(db.DateTime, nullable=False)
 	
 	__table_args__ = (
-		CheckConstraint('teventid <> uuid \'00000000-0000-0000-0000-000000000000\'', name='teventid_not_decoupled'),
+		CheckConstraint('teventid <> uuid \'00000000-0000-0000-0000-000000000000\'', name='teventid_not_decoupled'), # This period at the end here is absolutely stupid but necessary. `__table_args__` needs to be a tuple, which can't have size 1 in Python. Fuck Python. Also yes, this line is far longer than the 80 columns recommended by K&R. Well, this isn't the Linux kernel, so deal with it.
 	)
 
 # Represents the `ticket` table in the database
@@ -113,17 +122,16 @@ class Helpersession(db.Model):
 		ForeignKeyConstraint(['teventid', 'username'], ['helper.teventid', 'helper.username'], name='fk_helper', ondelete='RESTRICT', onupdate='RESTRICT'),
 	)
 
-# Ensure the application context is available for database operations
+# Setup the database
 with app.app_context():
-	# Step 1: Create the dummy function with exception handling
+	# Create the dummy function if the real one is not defined.
+	# For details on this shitty workaround, check lines 31+.
 	with db.engine.connect() as connection:
-		connection.execute(dummy_function)
+		connection.execute(teventid_fk_or_decoupled_check_dummy)
 		connection.commit()
 	
-	# Step 2: Create all tables using create_all
 	db.create_all()
 	
-	# Step 3: Replace the dummy function with the actual implementation
 	with db.engine.connect() as connection:
 		connection.execute(teventid_fk_or_decoupled_check)
 		connection.commit()
@@ -218,4 +226,19 @@ def login_test():
 		'login.html',
 		_=_,
 		event_selected=False
+	)
+
+@app.route("/test/select-action/")
+def select_action_test():
+	return render_template(
+		'select-action.html',
+		_=_
+	)
+
+@app.route("/test/ticket-create/")
+def ticket_create_test():
+	return render_template(
+		'ticket-create.html',
+		_=_,
+		eventname="Example event A"
 	)
