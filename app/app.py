@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID as SQLAlchemyUUID
-from sqlalchemy import CheckConstraint, ForeignKey, func, text, PrimaryKeyConstraint, ForeignKeyConstraint
+from sqlalchemy import CheckConstraint, text, PrimaryKeyConstraint, ForeignKeyConstraint
 import json
 import os
 
