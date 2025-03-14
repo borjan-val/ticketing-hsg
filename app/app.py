@@ -400,46 +400,6 @@ def event_management_test():
 		_=_
 	)
 
-@app.route("/test/event-picker/")
-def event_picker_test():
-	return render_template(
-		'event-picker.html',
-		_=_,
-		currently_selling=[
-			("Example event A", "0000-01-01", "9999-12-31"),
-			("Example event B", "0000-01-01", "9999-12-31"),
-			("Example event C", "0000-01-01", "9999-12-31")
-		],
-		not_currently_selling=[
-			("Example event D", "1969-12-31", "1970-01-01"),
-			("Example event E", "1969-12-31", "1970-01-01"),
-			("Example event F", "1969-12-31", "1970-01-01")
-		]
-	)
-
-@app.route("/test/login/")
-def login_test():
-	return render_template(
-		'login.html',
-		_=_,
-		event_selected=False
-	)
-
-@app.route("/test/select-action/")
-def select_action_test():
-	return render_template(
-		'select-action.html',
-		_=_
-	)
-
-@app.route("/test/ticket-create/")
-def ticket_create_test():
-	return render_template(
-		'ticket-create.html',
-		_=_,
-		eventname="Example event A"
-	)
-
 @app.route("/test/ticket-info/")
 def ticket_info_test():
 	return render_template(
