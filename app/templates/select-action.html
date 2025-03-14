@@ -11,8 +11,8 @@
 {% endblock %}
 
 {% block content %}
-{{ macros.navoption(text=_("ticket-create.title"), dest="/get/", icon="assets/icons/ticket.svg", connect_down=True) if eventname }}
-{{ macros.navoption(text=_("ticket-info.title"), dest="/check/", icon="assets/icons/info.svg", connect_up=True, connect_down=True) if eventname }}
+{{ macros.navoption(text=_("ticket-create.title"), dest="/get/", icon="assets/icons/ticket.svg", connect_down=True) if (eventname and selling) }}
+{{ macros.navoption(text=_("ticket-info.title"), dest="/check/", icon="assets/icons/info.svg", connect_up=selling, connect_down=True) if eventname }}
 {{ macros.navoption(text=_("login.title"), dest="/login/", icon="assets/icons/account.svg", connect_up=eventname, connect_down=True) if not logged_in }}
 {{ macros.navoption(text=(_("select-action.switchevent") if eventname else _("event-picker.title")), dest="/pick-event/", icon="assets/icons/event.svg", connect_up=(eventname or not logged_in), connect_down=logged_in) }}
 {{ macros.navoption(text=_("account.title"), dest="/account/", icon="assets/icons/account.svg", connect_up=True, connect_down=may_manage) if logged_in }}

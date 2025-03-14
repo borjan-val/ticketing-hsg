@@ -1,8 +1,10 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, make_response, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID as SQLAlchemyUUID
 from sqlalchemy import CheckConstraint, text, PrimaryKeyConstraint, ForeignKeyConstraint
 from werkzeug.middleware.proxy_fix import ProxyFix
+from datetime import datetime, timezone
+from uuid import UUID
 import json
 import os
 
@@ -69,7 +71,13 @@ class Tevent(db.Model):
 		CheckConstraint('teventid <> uuid \'00000000-0000-0000-0000-000000000000\'', name='teventid_not_decoupled'), # This comma at the end here is absolutely stupid but necessary. `__table_args__` needs to be a tuple, which can't have size 1 in Python. Fuck Python. Also yes, this line is far longer than the 80 columns recommended by K&R. Well, this isn't the Linux kernel, so deal with it.
 	)
 	
-	helpers = db.relationship('Helper', backref='event', viewonly=True)
+	helpers = db.relationship(
+		'Helper',
+		primaryjoin='Helper.teventid == Tevent.teventid',
+		foreign_keys='Helper.teventid',
+		backref='event',
+		viewonly=True
+	)
 
 class Ticket(db.Model):
 	teventid = db.Column(SQLAlchemyUUID(as_uuid=True))
@@ -81,7 +89,7 @@ class Ticket(db.Model):
 	
 	__table_args__ = (
 		PrimaryKeyConstraint('teventid', 'ticketid'),
-		ForeignKeyConstraint(['teventid'], ['tevent.teventid'], name='fk_teventid', ondelete='RESTRICT', onupdate='RESTRICT')
+		ForeignKeyConstraint(['teventid'], ['tevent.teventid'], name='fk_teventid', ondelete='CASCADE', onupdate='CASCADE')
 	)
 	
 	tevent = db.relationship('Tevent', backref='tickets')
@@ -107,10 +115,13 @@ class Helpersession(db.Model):
 	username = db.Column(db.Text, nullable=False)
 	
 	__table_args__ = (
-		ForeignKeyConstraint(['teventid', 'username'], ['helper.teventid', 'helper.username'], name='fk_helper', ondelete='RESTRICT', onupdate='RESTRICT'), # See line 64 for why this comma is here
+		ForeignKeyConstraint(['teventid', 'username'], ['helper.teventid', 'helper.username'], name='fk_helper', ondelete='CASCADE', onupdate='CASCADE'), # See line 64 for why this comma is here
 	)
 	
 	helper = db.relationship('Helper', backref='helpersessions')
+
+# teventid of decoupled helpers for more concise comparisons
+decoupled_uuid = UUID("00000000-0000-0000-0000-000000000000")
 
 # Setup the database
 with app.app_context():
@@ -148,16 +159,54 @@ def _(key):
 
 @app.errorhandler(404)
 def page_not_found(error):
-	return render_template('404.html', _=_), 404
+	return render_template("404.html", _=_), 404
 
+def curr_time():
+	return datetime.now(timezone.utc).replace(tzinfo=None)
+
+def sign_out(helpersession: Helpersession):
+	db.session.delete(helpersession)
+	resp = make_response(redirect("/"))
+	resp.delete_cookie("sessiontoken")
+	return resp
+
+# Landing page of the ticketing system
 @app.route("/")
 def select_action():
+	eventname = None
+	selling = False
+	event = db.session.get(Tevent, request.cookies.get("teventid"))
+	if (event != None):
+		eventname = event.teventname
+		selling = curr_time() > event.ticketstart and curr_time() < event.ticketend
+	
+	logged_in = False
+	may_manage = False
+	helpersession = db.session.get(Helpersession, request.cookies.get("sessiontoken"))
+	if (helpersession != None):
+		# If the session expired, log the helper out.
+		# If the helper is not decoupled, a valid event has been selected and the
+		# event the helper is logged in for is a different event than the selected one,
+		# log them out.
+		if (
+			   helpersession.expires <= curr_time()
+			or (
+				    helpersession.teventid != decoupled_uuid
+				and helpersession.teventid != event.teventid
+				and event != None
+			   )
+		):
+			return sign_out(helpersession)
+		logged_in = True
+		may_manage = helpersession.helper.canaddhelpers or helpersession.teventid == decoupled_uuid
+	
 	return render_template(
 		"select-action.html",
-		eventname="Example event A",
-		logged_in=True,
-		may_manage=True,
-		_=_
+		_=_,
+		eventname=eventname,
+		logged_in=logged_in,
+		selling=selling,
+		may_manage=may_manage
 	)
 
 # Prototype pages
