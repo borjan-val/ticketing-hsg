@@ -35,8 +35,8 @@
 </div>
 {% endmacro %}
 
-{% macro navoption(text, description="", icon="assets/icons/arrow.svg", disabled=False, connect_up=False, connect_down=False) %}
-<div class="on-monocard-interactable row-container {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if disabled %}interact-disabled{% endif %}">
+{% macro navoption(text, id, dest, description="", icon="assets/icons/arrow.svg", disabled=False, connect_up=False, connect_down=False) %}
+<a id="{{ id }}" {% if dest %}href={{ dest }}{% endif %} class="on-monocard-interactable row-container {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if disabled %}interact-disabled{% endif %}">
 	<span {% if disabled %}class="interact-disabled"{% endif %}>
 		{{ text }}
 		{% if description %}
@@ -45,7 +45,7 @@
 		{% endif %}
 	</span>
 	<img src="{{ url_for('static', filename=icon) }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/>
-</div>
+</a>
 {% endmacro %}
 
 {% macro ticketinput(id, value="", disable_input=False, disable_clear=False, disable_qr=True) %}

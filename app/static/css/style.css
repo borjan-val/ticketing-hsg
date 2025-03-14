@@ -251,6 +251,8 @@ button.on-monocard-interactable.interact-disabled, button.on-monocard-interactab
 	background-color: #24242A;
 	color: #FFFFFF;
 
+	text-decoration: none;
+
 	transition: background-color 300ms, color 300ms;
 	transition-timing-function: ease-in-out;
 }

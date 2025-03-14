@@ -150,6 +150,17 @@ def _(key):
 def page_not_found(error):
 	return render_template('404.html', _=_), 404
 
+@app.route("/")
+def select_action():
+	return render_template(
+		"select-action.html",
+		eventname="Example event A",
+		logged_in=True,
+		may_manage=True,
+		_=_
+	)
+
+# Prototype pages
 @app.route("/test/account/")
 def account_test():
 	return render_template(
