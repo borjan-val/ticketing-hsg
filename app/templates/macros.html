@@ -15,7 +15,7 @@
 {% endmacro %}
 
 {% macro textbox(id, placeholder, value="", password=False, disabled=False, connect_up=False, connect_down=False) %}
-<input id="{{ id }}" class="on-monocard-interactable {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if disabled %}interact-disabled{% endif %}" placeholder="{{ placeholder }}" value="{{ value }}" {% if disabled %}disabled{% endif %} {% if password %}type="password"{% endif %}/><br/>
+<input id="{{ id }}" name="{{ id }}" class="on-monocard-interactable {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if disabled %}interact-disabled{% endif %}" placeholder="{{ placeholder }}" value="{{ value }}" {% if disabled %}disabled{% endif %} {% if password %}type="password"{% endif %}/><br/>
 {% endmacro %}
 
 {% macro button(id, text, is_submit=False, disabled=False, connect_up=False, connect_down=False) %}
@@ -31,7 +31,7 @@
 		<div class="title-subtext">{{ description }}</div>
 		{% endif %}
 	</span>
-	<input id="{{ id }}" type="checkbox" class="on-monocard-interactable {% if disabled %}interact-disabled{% endif %}" {% if checked %}checked{% endif %} {% if disabled %}disabled{% endif %}/>
+	<input id="{{ id }}" name="{{ id }}" type="checkbox" class="on-monocard-interactable {% if disabled %}interact-disabled{% endif %}" {% if checked %}checked{% endif %} {% if disabled %}disabled{% endif %}/>
 </div>
 {% endmacro %}
 
@@ -50,7 +50,7 @@
 
 {% macro ticketinput(id, value="", disable_input=False, disable_clear=False, disable_qr=True) %}
 <div class="row-container">
-	<input id="{{ id }}" class="on-monocard-interactable ticket-input connect-right {% if disable_input %}interact-disabled{% endif %}" placeholder="ABC123" value="{{ value }}" maxlength="6" {% if disable_input %}disabled{% endif %}/>
+	<input id="{{ id }}" name="{{ id }}" class="on-monocard-interactable ticket-input connect-right {% if disable_input %}interact-disabled{% endif %}" placeholder="ABC123" value="{{ value }}" maxlength="6" {% if disable_input %}disabled{% endif %}/>
 	<div id="{{ id }}-clear" class="on-monocard-interactable ticket-option connect-left connect-right {% if disable_clear %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/delete.svg') }}" class="option-icon {% if disable_clear %}interact-disabled{% endif %}"/></div>
 	<div id="{{ id }}-qr" class="on-monocard-interactable ticket-option connect-left {% if disable_qr %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/qrcode.svg') }}" class="option-icon {% if disable_qr %}interact-disabled{% endif %}"/></div>
 </div>
@@ -60,7 +60,7 @@
 <div class="row-container">
 	<span>{{ text }}</span>
 	<div class="on-monocard-interactable row-option connect-right {% if disabled %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/minus.svg') }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/></div>
-	<input id="{{ id }}" class="on-monocard-interactable connect-left connect-right {% if disabled %}interact-disabled{% endif %}" type="number" {% if value %}value="{{ value }}"{% endif %} min="{{ min }}" max="{{ max }}" step="{{ step }}" {% if disabled %}disabled{% endif %}/>
+	<input id="{{ id }}" name="{{ id }}" class="on-monocard-interactable connect-left connect-right {% if disabled %}interact-disabled{% endif %}" type="number" {% if value %}value="{{ value }}"{% endif %} min="{{ min }}" max="{{ max }}" step="{{ step }}" {% if disabled %}disabled{% endif %}/>
 	<div class="on-monocard-interactable row-option connect-left {% if disabled %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/plus.svg') }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/></div>
 </div>
 {% endmacro %}

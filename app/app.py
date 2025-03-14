@@ -5,6 +5,7 @@ from sqlalchemy import CheckConstraint, text, PrimaryKeyConstraint, ForeignKeyCo
 from werkzeug.middleware.proxy_fix import ProxyFix
 from datetime import datetime, timezone
 from uuid import UUID
+from hashlib import sha256
 import json
 import os
 
@@ -250,8 +251,35 @@ def pick_event_none():
 	return resp
 
 # Login page
-@app.route("/login", strict_slashes=False)
+def digest(password, salt):
+	return sha256((password + salt).encode(encoding="utf-8")).hexdigest()
+
+@app.route("/login", strict_slashes=False, methods=("GET", "POST"))
 def login():
+	if request.method == "POST":
+		username = request.form["username"]
+		password = request.form["password"]
+		teventid = decoupled_uuid if (
+			   request.form["decoupled"] == "on"
+			or db.session.get(Tevent, request.cookies.get("teventid")) == None
+		) else request.cookies.get("teventid")
+		
+		if (username == None or password == None): return redirect("/login?err")
+		
+		helper = db.session.get(Helper, (teventid, username))
+		
+		if (helper == None): return redirect("/login?err")
+		if (digest(password, helper.salt) != helper.spasshashdigest): return redirect("/login?err")
+		
+		newsession = Helpersession(teventid=teventid, username=username)
+		db.session.add(newsession)
+		db.session.commit()
+		
+		resp = make_response(redirect("/"))
+		resp.set_cookie("sessiontoken", str(newsession.tokenid))
+		
+		return resp
+	
 	# If the user is still logged in, log them out
 	sessiontoken = request.cookies.get("sessiontoken")
 	if (sessiontoken != None):
@@ -263,7 +291,19 @@ def login():
 		
 		resp = make_response(redirect("/login/"))
 		resp.delete_cookie("sessiontoken")
+		return resp
 	
+	eventname = None
+	event = db.session.get(Tevent, request.cookies.get("teventid"))
+	if (event != None):
+		eventname = event.teventname
+	
+	return render_template(
+		"login.html",
+		_=_,
+		eventname=eventname,
+		error=("err" in request.args)
+	)
 
 
 # Prototype pages

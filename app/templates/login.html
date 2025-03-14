@@ -7,19 +7,51 @@
 {% endblock %}
 
 {% block subtitle %}
-{{ _("forevent") | replace("$$EVENTNAME$$", eventname) if event_selected else _("noevent") }}
+{{ _("forevent") | replace("$$EVENTNAME$$", eventname) if eventname else _("noevent") }}
 {% endblock %}
 
 {% block content %}
-{{ macros.note_error(id="invalid-login-note", text=_("login.invalid")) }}
-{{ macros.note_error(id="miscerror-note", text=_("miscerror")) }}
+{{ macros.note_error(id="invalid-login-note", text=_("login.invalid"), hidden=(not error)) }}
 {{ macros.spacer_small() }}
-<form id="login-form">
+<form id="login-form" method="post">
 {{ macros.textbox(id="username", placeholder=_("account.username"), connect_down=True) }}
 {{ macros.textbox(id="password", placeholder=_("create-helper-account.password"), password=True, connect_up=True) }}
 {{ macros.spacer_small() }}
-{{ macros.checkbox(id="decoupled", text=_("login.decoupled"), checked=(not event_selected), disabled=(not event_selected)) }}
+{{ macros.checkbox(id="decoupled", text=_("login.decoupled"), checked=(not eventname), disabled=(not eventname)) }}
 {{ macros.spacer_small() }}
 {{ macros.button(id="login-submit", text=_("login.confirm"), is_submit=True, disabled=True) }}
 </form>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+window.addEventListener("load", function() {
+	const usernameInput = document.getElementById("username");
+	const passwordInput = document.getElementById("password");
+	const submitBtn = document.getElementById("login-submit");
+
+	function enforce_username_formatting() {
+		usernameInput.value =
+			 usernameInput.value
+			.toLowerCase()
+			.replace(/[^a-z0-9\-]/g, '');
+	}
+
+	function check_form_filled() {
+		disable = !(
+			   usernameInput.value
+			&& passwordInput.value
+		);
+		submitBtn.disabled = disable;
+		if (disable && !submitBtn.classList.contains("interact-disabled")) {
+			submitBtn.classList.add("interact-disabled");
+		} else if (!disable) {
+			submitBtn.classList.remove("interact-disabled");
+		}
+	}
+
+	usernameInput.addEventListener("input", enforce_username_formatting);
+	usernameInput.addEventListener("input", check_form_filled);
+	passwordInput.addEventListener("input", check_form_filled);
+});
+</script>
 {% endblock %}
