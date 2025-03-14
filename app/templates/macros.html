@@ -2,6 +2,10 @@
 <div class="on-monocard-spacer-small"></div>
 {% endmacro %}
 
+{% macro spacer_large() %}
+<div class="on-monocard-spacer-large"></div>
+{% endmacro %}
+
 {% macro note(id, text, hidden=False, connect_up=False, connect_down=False) %}
 <div id="{{ id }}" class="on-monocard-note {% if connect_up %}connect-up{% endif %} {% if connect_down %}connect-down{% endif %} {% if hidden %}collapsed-vertical{% endif %}">{{ text }}</div>
 {% endmacro %}
@@ -45,10 +49,10 @@
 {% endmacro %}
 
 {% macro ticketinput(id, value="", disable_input=False, disable_clear=False, disable_qr=True) %}
-<div>
+<div class="row-container">
 	<input id="{{ id }}" class="on-monocard-interactable ticket-input connect-right {% if disable_input %}interact-disabled{% endif %}" placeholder="ABC123" value="{{ value }}" maxlength="6" {% if disable_input %}disabled{% endif %}/>
-	<div id="{{ id }}-clear" class="on-monocard-interactable ticket-option connect-left connect-right {% if disable_clear %}interact-disabled{% endif %}"><img src="../static/assets/icons/delete.svg" class="option-icon {% if disable_clear %}interact-disabled{% endif %}"/></div>
-	<div id="{{ id }}-qr" class="on-monocard-interactable ticket-option connect-left {% if disable_qr %}interact-disabled{% endif %}"><img src="../static/assets/icons/qrcode.svg" class="option-icon {% if disable_qr %}interact-disabled{% endif %}"/></div>
+	<div id="{{ id }}-clear" class="on-monocard-interactable ticket-option connect-left connect-right {% if disable_clear %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/delete.svg') }}" class="option-icon {% if disable_clear %}interact-disabled{% endif %}"/></div>
+	<div id="{{ id }}-qr" class="on-monocard-interactable ticket-option connect-left {% if disable_qr %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/qrcode.svg') }}" class="option-icon {% if disable_qr %}interact-disabled{% endif %}"/></div>
 </div>
 {% endmacro %}
 

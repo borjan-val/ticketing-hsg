@@ -11,5 +11,12 @@
 {% endblock %}
 
 {% block content %}
-{{ macros.navoption(text=_("")) }}
+{{ macros.navoption(text=_("ticket-create.title"), icon="assets/icons/ticket.svg", connect_down=True) }}
+{{ macros.navoption(text=_("ticket-info.title"), icon="assets/icons/info.svg", connect_up=True, connect_down=True) }}
+{{ macros.navoption(text=_("login.title"), icon="assets/icons/account.svg", connect_up=True) }}
+{{ macros.spacer_small() }}
+{{ macros.navoption(text=_("select-action.switchevent"), icon="assets/icons/event.svg") }}
+{{ macros.spacer_small() }}
+{{ macros.navoption(text=_("account.title"), icon="assets/icons/account.svg", connect_down=True) }}
+{{ macros.navoption(text=_("event-management.title"), icon="assets/icons/manage.svg", connect_up=True) }}
 {% endblock %}

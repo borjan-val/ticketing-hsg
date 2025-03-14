@@ -225,3 +225,17 @@ def ticket_create_test():
 		_=_,
 		eventname="Example event A"
 	)
+
+@app.route("/test/ticket-info/")
+def ticket_info_test():
+	return render_template(
+		'ticket-info.html',
+		_=_,
+		eventname="Example event A",
+		ticketcode="ABC123",
+		ticket_valid=False,
+		cancheck=True,
+		cansell=True,
+		name="John",
+		surname="Doe"
+	)

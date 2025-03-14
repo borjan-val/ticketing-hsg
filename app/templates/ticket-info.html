@@ -1,44 +1,39 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>HSG Ticketing - Ticket info</title>
-		<meta charset="utf-8"/>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<link rel="stylesheet" href="style.css"/>
-	</head>
-	<body>
-		<div id="monocard">
-			<div class="on-monocard-title-primary">
-				Check a ticket
-				<div id="title-navigate"></div>
-			</div>
-			<div class="on-monocard-spacer-small"></div>
-			<div class="row-container">
-				<input class="on-monocard-interactable ticket-input connect-right" placeholder="TICKET" maxlength="6" disabled value="ABC123"/>
-				<div class="on-monocard-interactable ticket-option connect-left connect-right"><img src="../assets/delete.svg" class="option-icon"/></div>
-				<div class="on-monocard-interactable ticket-option connect-left" disabled="true"><img src="../assets/qrcode.svg" class="option-icon" disabled="true"/></div>
-			</div>
-			<div class="on-monocard-spacer-large"></div>
-			<div id="ticket-status-message">This ticket is <span class="ticket-not-approved"></span> for entry</div>
-			<div class="on-monocard-spacer-large"></div>
-			<div class="on-monocard-note connect-down">To see additional information or mark this ticket as paid, an authorized Helper account must be logged in</div>
-			<table class="connect-up connect-down">
-				<tr>
-					<th>Name</th>
-					<td>John</td>
-				</tr>
-				<tr>
-					<th>Surname</th>
-					<td>Doe</td>
-				</tr>
-				<tr>
-					<th>Grade</th>
-					<td>12</td>
-				</tr>
-			</table>
-			<button class="on-monocard-interactable connect-up">Mark ticket as paid for</button>
-		</div>
-		<footer></footer>
-	</body>
-</html>
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block title %}
+{{ _("ticket-info.title") }}
+{% endblock %}
+
+
+{% block subtitle %}
+{{ _("forevent") | replace("$$EVENTNAME$$", eventname)}}
+{% endblock %}
+
+{% block content %}
+<form method="post" id="ticket-check-form">
+{{ macros.ticketinput(id="ticketcode", value=ticketcode, disable_input=ticketcode) }}
+</form>
+{{ macros.spacer_large() if ticketcode }}
+{{ macros.ticketvalidity(outer_text=_("ticket-info.valid-outer"), inner_text=(_("ticket-info.valid-inner-true") if ticket_valid else _("ticket-info.valid-inner-false")), is_valid=ticket_valid) if ticketcode }}
+{{ macros.spacer_large() if ticketcode }}
+{{ macros.note(text=_("ticket-info.helpernote"), hidden=(cancheck and cansell), connect_down=(cancheck or cansell)) }}
+{% if cancheck %}
+<table class="{{ 'connect-down' if cansell else 'connect-up' }}">
+	<tr>
+		<th>{{ _("ticket-info.name") }}</th>
+		<td>{{ name }}</td>
+	</tr>
+	<tr>
+		<th>{{ _("ticket-info.surname") }}</th>
+		<td>{{ surname }}</td>
+	</tr>
+	<tr>
+		<th>{{ _("ticket-info.grade") }}</th>
+		<td>{{ grade if grade else _("ticket-info.nonstudent") }}</td>
+	</tr>
+</table>
+{{ macros.button(id="ticket-mark-paid", text=_("ticket-info.markpaid"), disabled=ticket_valid, connect_up=True) if cansell}}
+{% endif %}
+{% endblock %}
