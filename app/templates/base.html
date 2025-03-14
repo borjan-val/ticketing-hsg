@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>HSG Ticketing{% if self.title().strip() %} - {% endif %}{{ self.title() }}</title>
+		<title>HSG Ticketing{% if self.title() %} - {% endif %}{{ self.title() }}</title>
 		<meta charset="utf-8"/>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
-		<script src="{{ url_for('static', filename='javascript/input-extensions.js') }}"></script>
-		<script src="{{ url_for('static', filename='javascript/input-validation.js') }}"></script>
 	</head>
 	<body>
 		<div id="monocard">
 			<div class="on-monocard-title-primary">
 				{{ self.title() }}
-				<div id="title-navigate"></div>
+				<a href="/" id="title-navigate"></a>
 			</div>
 			<div class="title-subtext">{% block subtitle %}{% endblock %}</div>
 			{% if self.content().strip() %}<div class="on-monocard-spacer-small"></div>{% endif %}
