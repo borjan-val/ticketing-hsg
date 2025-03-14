@@ -6,6 +6,8 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from datetime import datetime, timezone
 from uuid import UUID
 from hashlib import sha256
+from string import ascii_uppercase, digits
+import random
 import json
 import os
 
@@ -123,6 +125,9 @@ class Helpersession(db.Model):
 
 # teventid of decoupled helpers for more concise comparisons
 decoupled_uuid = UUID("00000000-0000-0000-0000-000000000000")
+
+# Set of possible ticket code characters
+ticket_chars = ascii_uppercase + digits
 
 # Setup the database
 with app.app_context():
@@ -305,6 +310,52 @@ def login():
 		error=("err" in request.args)
 	)
 
+# Ticket creation page
+@app.route("/get", strict_slashes=False, methods=("GET", "POST"))
+def get_ticket():
+	event = db.session.get(Tevent, request.cookies.get("teventid"))
+	if (event == None): return redirect("/")
+	if (curr_time() <= event.ticketstart or curr_time() >= event.ticketend): return redirect("/")
+
+	if request.method == "POST":
+		name = request.form["name"]
+		surname = request.form["surname"]
+		nograde = request.form.get("non-student", "off") == "on"
+		grade = int(request.form.get("grade", -1))
+
+		if (not nograde and (grade < 1 or grade > 12)): return redirect("/get/")
+
+		ticketcode = "".join(random.choices(ticket_chars, k=6))
+
+		newticket = Ticket(
+			teventid=event.teventid,
+			ticketid=ticketcode,
+			tname=name,
+			tsurname=surname,
+			grade=(-1 if nograde else grade)
+		)
+
+		db.session.add(newticket)
+		db.session.commit()
+
+		return render_template(
+			"ticket-info.html",
+			_=_,
+			eventname=event.teventname,
+			ticketcode=ticketcode,
+			ticket_valid=False,
+			cancheck=True,
+			cansell=False,
+			name=name,
+			surname=surname,
+			grade=(None if nograde else grade)
+		)
+
+	return render_template(
+		"ticket-create.html",
+		_=_,
+		eventname=event.teventname
+	)
 
 # Prototype pages
 @app.route("/test/account/")

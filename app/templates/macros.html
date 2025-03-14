@@ -58,10 +58,10 @@
 
 {% macro numberinput(id, text, value, min=1, max=13, step=1, disabled=False) %}
 <div class="row-container">
-	<span>{{ text }}</span>
-	<div class="on-monocard-interactable row-option connect-right {% if disabled %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/minus.svg') }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/></div>
+	<span id="{{ id }}-label">{{ text }}</span>
+	<div id="{{ id }}-step-down" class="on-monocard-interactable row-option connect-right {% if disabled %}interact-disabled{% endif %}"><img id="{{ id }}-step-down-img" src="{{ url_for('static', filename='assets/icons/minus.svg') }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/></div>
 	<input id="{{ id }}" name="{{ id }}" class="on-monocard-interactable connect-left connect-right {% if disabled %}interact-disabled{% endif %}" type="number" {% if value %}value="{{ value }}"{% endif %} min="{{ min }}" max="{{ max }}" step="{{ step }}" {% if disabled %}disabled{% endif %}/>
-	<div class="on-monocard-interactable row-option connect-left {% if disabled %}interact-disabled{% endif %}"><img src="{{ url_for('static', filename='assets/icons/plus.svg') }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/></div>
+	<div id="{{ id }}-step-up" class="on-monocard-interactable row-option connect-left {% if disabled %}interact-disabled{% endif %}"><img id="{{ id }}-step-up-img" src="{{ url_for('static', filename='assets/icons/plus.svg') }}" class="option-icon {% if disabled %}interact-disabled{% endif %}"/></div>
 </div>
 {% endmacro %}
 

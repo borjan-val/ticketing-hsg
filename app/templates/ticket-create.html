@@ -12,13 +12,133 @@
 {% endblock %}
 
 {% block content %}
-<form id="ticket-create-form">
+<form id="ticket-create-form" method="post">
 {{ macros.textbox(id="name", placeholder=_("ticket-create.name"), connect_down=True) }}
 {{ macros.textbox(id="surname", placeholder=_("ticket-create.surname"), connect_up=True) }}
 {{ macros.spacer_small() }}
 {{ macros.checkbox(id="non-student", text=_("ticket-create.nograde")) }}
-{{ macros.numberinput(id="grade", text=_("ticket-create.grade"), min=1, max=12, step=1) }}
+{{ macros.numberinput(id="grade", text=_("ticket-create.grade"), min=1, max=12, step=1, value=1) }}
 {{ macros.spacer_small() }}
 {{ macros.button(id="ticket-create-confirm", text=_("ticket-create.confirm"), is_submit=True, disabled=True) }}
 </form>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+window.addEventListener("load", function() {
+	const nameInput = document.getElementById("name");
+	const surnameInput = document.getElementById("surname");
+	const nonStudentCheckbox = document.getElementById("non-student");
+	const gradeInput = document.getElementById("grade");
+	const submitBtn = document.getElementById("ticket-create-confirm");
+
+	const gradeInput_stepDown = document.getElementById("grade-step-down");
+	const gradeInput_stepDown_img = document.getElementById("grade-step-down-img");
+	const gradeInput_stepUp = document.getElementById("grade-step-up");
+	const gradeInput_stepUp_img = document.getElementById("grade-step-up-img");
+	const gradeInput_label = document.getElementById("grade-label");
+
+	function check_form_filled() {
+		disable = !(
+			   nameInput.value
+			&& surnameInput.value
+			&& (
+				   nonStudentCheckbox.checked
+				|| (
+					   parseInt(gradeInput.value) >= parseInt(gradeInput.min)
+					&& parseInt(gradeInput.value) <= parseInt(gradeInput.max)
+					&& gradeInput.value
+				)
+			)
+		);
+		submitBtn.disabled = disable;
+		if (disable && !submitBtn.classList.contains("interact-disabled")) {
+			submitBtn.classList.add("interact-disabled");
+		} else if (!disable) {
+			submitBtn.classList.remove("interact-disabled");
+		}
+	}
+
+	function enforce_grade_bounds() {
+		gradeInput.value =
+			 gradeInput.value
+			.replace(/[^0-9]/g, '');
+		
+		if (!gradeInput.value) {
+			gradeInput.value = gradeInput.min;
+		}
+
+		disableStepUp = parseInt(gradeInput.value) >= parseInt(gradeInput.max);
+		disableStepDown = parseInt(gradeInput.value) <= parseInt(gradeInput.min);
+
+		if (disableStepDown && !gradeInput_stepDown.classList.contains("interact-disabled")) {
+			gradeInput_stepDown.classList.add("interact-disabled");
+			gradeInput_stepDown_img.classList.add("interact-disabled");
+		} else if (!disableStepDown && !nonStudentCheckbox.checked) {
+			gradeInput_stepDown.classList.remove("interact-disabled");
+			gradeInput_stepDown_img.classList.remove("interact-disabled");
+		}
+
+		if (disableStepUp && !gradeInput_stepUp.classList.contains("interact-disabled")) {
+			gradeInput_stepUp.classList.add("interact-disabled");
+			gradeInput_stepUp_img.classList.add("interact-disabled");
+		} else if (!disableStepUp && !nonStudentCheckbox.checked) {
+			gradeInput_stepUp.classList.remove("interact-disabled");
+			gradeInput_stepUp_img.classList.remove("interact-disabled");
+		}
+	}
+
+	function try_step_up() {
+		if (parseInt(gradeInput.value) < parseInt(gradeInput.max) && !nonStudentCheckbox.checked) {
+			gradeInput.stepUp();
+		}
+	}
+	function try_step_down() {
+		if (parseInt(gradeInput.value) > parseInt(gradeInput.min) && !nonStudentCheckbox.checked) {
+			gradeInput.stepDown();
+		}
+	}
+
+	function disable_gradeInput_if_nonStudent () {
+		gradeInput.disabled = nonStudentCheckbox.checked
+
+		if (nonStudentCheckbox.checked && !gradeInput.classList.contains("interact-disabled")) {
+			gradeInput.classList.add("interact-disabled");
+			gradeInput_stepDown.classList.add("interact-disabled");
+			gradeInput_stepDown_img.classList.add("interact-disabled");
+			gradeInput_stepUp.classList.add("interact-disabled");
+			gradeInput_stepUp_img.classList.add("interact-disabled");
+			gradeInput_label.classList.add("interact-disabled");
+		} else if (!nonStudentCheckbox.checked) {
+			gradeInput.classList.remove("interact-disabled");
+			gradeInput_stepDown.classList.remove("interact-disabled");
+			gradeInput_stepDown_img.classList.remove("interact-disabled");
+			gradeInput_stepUp.classList.remove("interact-disabled");
+			gradeInput_stepUp_img.classList.remove("interact-disabled");
+			gradeInput_label.classList.remove("interact-disabled");
+			enforce_grade_bounds();
+		}
+	}
+
+	gradeInput_stepUp.addEventListener("click", try_step_up);
+	gradeInput_stepDown.addEventListener("click", try_step_down);
+
+	gradeInput_stepUp.addEventListener("click", enforce_grade_bounds);
+	gradeInput_stepDown.addEventListener("click", enforce_grade_bounds);
+	gradeInput.addEventListener("input", enforce_grade_bounds);
+
+	nonStudentCheckbox.addEventListener("input", disable_gradeInput_if_nonStudent);
+
+	nameInput.addEventListener("input", check_form_filled);
+	surnameInput.addEventListener("input", check_form_filled);
+	nonStudentCheckbox.addEventListener("input", check_form_filled);
+	gradeInput.addEventListener("input", check_form_filled);
+	gradeInput_stepDown.addEventListener("click", check_form_filled);
+	gradeInput_stepUp.addEventListener("click", check_form_filled);
+
+	enforce_grade_bounds();
+	disable_gradeInput_if_nonStudent();
+	check_form_filled();
+});
+</script>
 {% endblock %}
