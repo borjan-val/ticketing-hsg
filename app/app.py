@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID as SQLAlchemyUUID
 from sqlalchemy import CheckConstraint, text, PrimaryKeyConstraint, ForeignKeyConstraint
+from werkzeug.middleware.proxy_fix import ProxyFix
 import json
 import os
 
@@ -19,6 +20,11 @@ connection_string = f"postgresql+psycopg://{db_username}:{db_password}@{db_host}
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
 db = SQLAlchemy(app)
+
+# Tell Flask it is behind a proxy
+app.wsgi_app = ProxyFix(
+	app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+)
 
 # For information concerning the database layout as represented by SQLAlchemy
 # syntax below, consult the technical documentation of the repository.
