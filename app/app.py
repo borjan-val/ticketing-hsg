@@ -172,7 +172,7 @@ def sign_out(helpersession: Helpersession):
 	return resp
 
 # Landing page of the ticketing system
-@app.route("/")
+@app.route("/", strict_slashes=False)
 def select_action():
 	eventname = None
 	selling = False
@@ -211,7 +211,7 @@ def select_action():
 	)
 
 # Event picker
-@app.route("/pick-event/")
+@app.route("/pick-event", strict_slashes=False)
 def event_picker():
 	events = Tevent.query.all()
 	currently_selling = []
@@ -234,7 +234,7 @@ def event_picker():
 		not_currently_selling=not_currently_selling
 	)
 
-@app.route("/pick-event/<uuid:teventid>")
+@app.route("/pick-event/<uuid:teventid>", strict_slashes=False)
 def pick_event(teventid):
 	if (db.session.get(Tevent, teventid) != None):
 		resp = make_response(redirect("/"))
@@ -243,14 +243,14 @@ def pick_event(teventid):
 	else:
 		return redirect("/pick-event/")
 
-@app.route("/pick-event/none/")
+@app.route("/pick-event/none", strict_slashes=False)
 def pick_event_none():
 	resp = make_response(redirect("/"))
 	resp.delete_cookie("teventid")
 	return resp
 
 # Login page
-@app.route("/login/")
+@app.route("/login", strict_slashes=False)
 def login():
 	# If the user is still logged in, log them out
 	sessiontoken = request.cookies.get("sessiontoken")
