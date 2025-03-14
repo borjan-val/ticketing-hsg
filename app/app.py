@@ -166,6 +166,7 @@ def curr_time():
 
 def sign_out(helpersession: Helpersession):
 	db.session.delete(helpersession)
+	db.session.commit()
 	resp = make_response(redirect("/"))
 	resp.delete_cookie("sessiontoken")
 	return resp
@@ -233,7 +234,6 @@ def event_picker():
 		not_currently_selling=not_currently_selling
 	)
 
-
 @app.route("/pick-event/<uuid:teventid>")
 def pick_event(teventid):
 	if (db.session.get(Tevent, teventid) != None):
@@ -248,6 +248,23 @@ def pick_event_none():
 	resp = make_response(redirect("/"))
 	resp.delete_cookie("teventid")
 	return resp
+
+# Login page
+@app.route("/login/")
+def login():
+	# If the user is still logged in, log them out
+	sessiontoken = request.cookies.get("sessiontoken")
+	if (sessiontoken != None):
+		try:
+			db.session.delete(db.session.get(Helpersession, sessiontoken))
+			db.session.commit()
+		except:
+			pass
+		
+		resp = make_response(redirect("/login/"))
+		resp.delete_cookie("sessiontoken")
+	
+
 
 # Prototype pages
 @app.route("/test/account/")
