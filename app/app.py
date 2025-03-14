@@ -265,8 +265,8 @@ def login():
 		username = request.form["username"]
 		password = request.form["password"]
 		teventid = decoupled_uuid if (
-			   request.form["decoupled"] == "on"
-			or db.session.get(Tevent, request.cookies.get("teventid")) == None
+			   request.form.get("decoupled", "off") == "on"
+			or db.session.get(Tevent, request.cookies.get("teventid", str(decoupled_uuid))) == None
 		) else request.cookies.get("teventid")
 		
 		if (username == None or password == None): return redirect("/login?err")
