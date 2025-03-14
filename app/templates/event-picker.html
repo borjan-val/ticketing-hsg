@@ -12,12 +12,12 @@
 
 {% block content %}
 {% for event in currently_selling %}
-{{ macros.navoption(text=event[0], description=(_("event-picker.ticketsale") | replace("$$TICKETSTART$$", event[1]) | replace("$$TICKETEND$$", event[2])), connect_up=(not loop.first), connect_down=(not loop.last)) }}
+{{ macros.navoption(text=event[0], dest="/pick-event/" + event[3], description=(_("event-picker.ticketsale") | replace("$$TICKETSTART$$", event[1]) | replace("$$TICKETEND$$", event[2])), connect_up=(not loop.first), connect_down=(not loop.last)) }}
 {% endfor %}
-{{ macros.spacer_small() }}
+{{ macros.spacer_small() if currently_selling }}
 {% for event in not_currently_selling %}
-{{ macros.navoption(text=event[0], description=(_("event-picker.noticketsale") | replace("$$TICKETSTART$$", event[1]) | replace("$$TICKETEND$$", event[2])), connect_up=(not loop.first), connect_down=(not loop.last)) }}
+{{ macros.navoption(text=event[0], dest="/pick-event/" + event[3], description=(_("event-picker.noticketsale") | replace("$$TICKETSTART$$", event[1]) | replace("$$TICKETEND$$", event[2])), connect_up=(not loop.first), connect_down=(not loop.last)) }}
 {% endfor %}
-{{ macros.spacer_small() }}
-{{ macros.navoption(text=_("event-picker.noevent")) }}
+{{ macros.spacer_small() if not_currently_selling }}
+{{ macros.navoption(text=_("event-picker.noevent"), dest="/pick-event/none/") }}
 {% endblock %}

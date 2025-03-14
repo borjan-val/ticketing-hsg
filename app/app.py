@@ -209,6 +209,46 @@ def select_action():
 		may_manage=may_manage
 	)
 
+# Event picker
+@app.route("/pick-event/")
+def event_picker():
+	events = Tevent.query.all()
+	currently_selling = []
+	not_currently_selling = []
+	for event in events:
+		fevent = (
+				event.teventname,
+				event.ticketstart.strftime("%Y-%m-%d"),
+				event.ticketend.strftime("%Y-%m-%d"),
+				str(event.teventid)
+			)
+		if (event.ticketstart < curr_time() and event.ticketend > curr_time()):
+			currently_selling.append(fevent)
+		else:
+			not_currently_selling.append(fevent)
+	return render_template(
+		"event-picker.html",
+		_=_,
+		currently_selling=currently_selling,
+		not_currently_selling=not_currently_selling
+	)
+
+
+@app.route("/pick-event/<uuid:teventid>")
+def pick_event(teventid):
+	if (db.session.get(Tevent, teventid) != None):
+		resp = make_response(redirect("/"))
+		resp.set_cookie("teventid", str(teventid))
+		return resp
+	else:
+		return redirect("/pick-event/")
+
+@app.route("/pick-event/none/")
+def pick_event_none():
+	resp = make_response(redirect("/"))
+	resp.delete_cookie("teventid")
+	return resp
+
 # Prototype pages
 @app.route("/test/account/")
 def account_test():
